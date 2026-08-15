@@ -71,32 +71,34 @@ class ExperienceSection extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Timeline Vertical Indicator
-                Column(
-                  children: [
-                    Container(
-                      width: 16,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ],
+                // Timeline Vertical Indicator (Only on desktop)
+                if (!isMobile) ...[
+                  Column(
+                    children: [
+                      Container(
+                        width: 16,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: 2,
-                      height: 380,
-                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 20),
+                      Container(
+                        width: 2,
+                        height: 380,
+                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                ],
 
                 // Main Content
                 Expanded(

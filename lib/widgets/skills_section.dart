@@ -82,40 +82,78 @@ class SkillsSection extends StatelessWidget {
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.language_rounded,
-                  color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                  size: 22,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Languages Spoken: ',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: SkillsData.languages.map((lang) {
-                      return Chip(
-                        label: Text(lang, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-                        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
-                        side: BorderSide(
-                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+            child: isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.language_rounded,
+                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                            size: 22,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Languages Spoken: ',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: SkillsData.languages.map((lang) {
+                          return Chip(
+                            label: Text(lang, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                            backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
+                            side: BorderSide(
+                              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Icon(
+                        Icons.language_rounded,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Languages Spoken: ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         ),
-                      );
-                    }).toList(),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: SkillsData.languages.map((lang) {
+                            return Chip(
+                              label: Text(lang, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
+                              side: BorderSide(
+                                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
