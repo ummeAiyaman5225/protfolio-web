@@ -67,7 +67,7 @@ class HeroSection extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                AppColors.cyanAccent,
+                AppColors.primaryAccent,
               ],
             ),
             boxShadow: [
@@ -93,11 +93,9 @@ class HeroSection extends StatelessWidget {
           ),
           child: ClipOval(
             child: Image.asset(
-              // profile image upload here
               AppConfig.profileImagePath,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
-                // Fallback developer profile placeholder
                 return Container(
                   color: isDark ? AppColors.darkCardBg : AppColors.lightCardHover,
                   child: Column(
@@ -135,7 +133,7 @@ class HeroSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
+                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.08),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -234,12 +232,12 @@ class HeroSection extends StatelessWidget {
         // Roles
         Wrap(
           alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
-          spacing: 12,
+          spacing: 10,
           runSpacing: 8,
           children: [
-            _roleBadge(AppConfig.primaryTitle, isDark, true),
-            _roleBadge('Full Stack Developer', isDark, false),
-            _roleBadge('Mobile App Engineer', isDark, false),
+            _roleBadge('Full-Stack Developer', isDark, true),
+            _roleBadge('Flutter & Dart Specialist', isDark, false),
+            _roleBadge('Firebase & REST APIs', isDark, false),
           ],
         ),
         const SizedBox(height: 20),
@@ -256,7 +254,7 @@ class HeroSection extends StatelessWidget {
         ),
         const SizedBox(height: 28),
 
-        // Primary & Secondary CTA Action Buttons
+        // Action Buttons
         Wrap(
           alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           spacing: 12,
@@ -270,43 +268,24 @@ class HeroSection extends StatelessWidget {
                 backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                 foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                elevation: 3,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                elevation: 4,
               ),
             ),
             OutlinedButton.icon(
-              onPressed: () {
-                // CV PDF upload here
-                UrlLauncherUtil.launchURL(AppConfig.cvPdfPath);
-              },
-              icon: const FaIcon(FontAwesomeIcons.download, size: 16),
-              label: const Text('Download CV'),
+              onPressed: onContactPressed,
+              icon: const Icon(Icons.mail_rounded, size: 18),
+              label: const Text('Contact Me'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 side: BorderSide(
                   color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            ElevatedButton.icon(
-              onPressed: onContactPressed,
-              icon: const Icon(Icons.mail_rounded, size: 18),
-              label: const Text('Contact Me'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkCardBg : AppColors.lightCardHover,
-                foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(
-                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
-                  ),
                 ),
               ),
             ),
@@ -314,7 +293,7 @@ class HeroSection extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // Social Links (GENUINELY CLICKABLE)
+        // Social Links
         Row(
           mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
           children: [
@@ -357,7 +336,7 @@ class HeroSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isPrimary
             ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-            : (isDark ? AppColors.darkCardBg : AppColors.lightCardHover),
+            : (isDark ? AppColors.darkCardBg : AppColors.lightAccentGlow),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
@@ -394,11 +373,11 @@ class HeroSection extends StatelessWidget {
             color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),

@@ -44,7 +44,7 @@ class SkillsSection extends StatelessWidget {
           Text(
             'Technologies & Expertise',
             style: TextStyle(
-              fontSize: 26,
+              fontSize: isMobile ? 24 : 32,
               fontWeight: FontWeight.bold,
               color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
@@ -79,7 +79,7 @@ class SkillsSection extends StatelessWidget {
               color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
             child: Row(
@@ -153,7 +153,7 @@ class SkillsSection extends StatelessWidget {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -201,16 +201,16 @@ class SkillsSection extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: category.skills.map((skill) {
-              final isFlutter = skill == 'Flutter';
+              final isHighlighted = skill == 'Flutter' || skill == 'Firebase';
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isFlutter
+                  color: isHighlighted
                       ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
                       : (isDark ? AppColors.darkBackground : AppColors.lightCardHover),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isFlutter
+                    color: isHighlighted
                         ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
                         : (isDark
                             ? AppColors.darkAccent.withValues(alpha: 0.2)
@@ -221,8 +221,8 @@ class SkillsSection extends StatelessWidget {
                   skill,
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: isFlutter ? FontWeight.bold : FontWeight.w500,
-                    color: isFlutter
+                    fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
+                    color: isHighlighted
                         ? (isDark ? AppColors.darkBackground : Colors.white)
                         : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
                   ),

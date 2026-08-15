@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app/constants/app_colors.dart';
 import '../app/constants/app_strings.dart';
 import '../utils/responsive.dart';
+import '../utils/url_launcher_util.dart';
+import 'cv_viewer_modal.dart';
 
 class AboutSection extends StatelessWidget {
-  const AboutSection({super.key});
+  final VoidCallback? onViewWorkPressed;
+  final VoidCallback? onContactPressed;
+
+  const AboutSection({
+    super.key,
+    this.onViewWorkPressed,
+    this.onContactPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +34,7 @@ class AboutSection extends StatelessWidget {
           Responsive(
             mobile: Column(
               children: [
-                _buildDescriptionText(isDark),
+                _buildDescriptionText(context, isDark, isMobile: true),
                 const SizedBox(height: 32),
                 _buildStatsGrid(isDark, isMobile: true),
               ],
@@ -34,7 +44,7 @@ class AboutSection extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 6,
-                  child: _buildDescriptionText(isDark),
+                  child: _buildDescriptionText(context, isDark, isMobile: false),
                 ),
                 const SizedBox(width: 48),
                 Expanded(
@@ -86,44 +96,138 @@ class AboutSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDescriptionText(bool isDark) {
+  Widget _buildDescriptionText(BuildContext context, bool isDark, {required bool isMobile}) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Text(
-        AppStrings.aboutDescription,
-        style: TextStyle(
-          fontSize: 15,
-          height: 1.7,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppStrings.aboutDescription,
+            style: TextStyle(
+              fontSize: 15,
+              height: 1.7,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Divider(),
+          const SizedBox(height: 20),
+
+          // About Section Action Buttons (View Work, View CV, Download CV, Contact Me)
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              // Primary: View Work
+              ElevatedButton.icon(
+                onPressed: onViewWorkPressed,
+                icon: const Icon(Icons.folder_special_rounded, size: 16),
+                label: const Text('View Work'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                  foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              // View CV
+              ElevatedButton.icon(
+                onPressed: () => CvViewerModal.show(context),
+                icon: const Icon(Icons.description_rounded, size: 16),
+                label: const Text('View CV'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isDark ? AppColors.darkCardHover : AppColors.lightAccentGlow,
+                  foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  elevation: 0,
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              // Download CV
+              ElevatedButton.icon(
+                onPressed: () => UrlLauncherUtil.launchURL(CvViewerModal.cvImagePath),
+                icon: const FaIcon(FontAwesomeIcons.download, size: 14),
+                label: const Text('Download CV'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isDark ? AppColors.darkCardHover : AppColors.lightAccentGlow,
+                  foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  elevation: 0,
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              // Secondary: Contact Me
+              OutlinedButton.icon(
+                onPressed: onContactPressed,
+                icon: const Icon(Icons.mail_rounded, size: 16),
+                label: const Text('Contact Me'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildStatsGrid(bool isDark, {required bool isMobile}) {
     final stats = [
-      {'number': '1+', 'label': 'Years Experience', 'sub': 'Professional Dev'},
-      {'number': 'Cross', 'label': 'Android & iOS', 'sub': 'Platform Expert'},
-      {'number': '5+', 'label': 'GitHub Projects', 'sub': 'Working Codebases'},
-      {'number': '3', 'label': 'Live Play Store Apps', 'sub': 'Production Apps'},
-      {'number': 'Multiple', 'label': 'Production Projects', 'sub': 'Full Stack Solutions'},
+      {'number': '1+', 'label': 'Years Experience', 'sub': 'Full-Stack & Mobile'},
+      {'number': 'Cross', 'label': 'Android & iOS', 'sub': 'Flutter Specialist'},
+      {'number': '5+', 'label': 'Production Repos', 'sub': 'GitHub Projects'},
+      {'number': '3', 'label': 'Live Play Store Apps', 'sub': 'Production Published'},
     ];
 
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isMobile ? 2 : 2,
+        crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: isMobile ? 1.3 : 1.4,
+        childAspectRatio: isMobile ? 1.25 : 1.35,
       ),
       itemCount: stats.length,
       itemBuilder: (context, index) {
@@ -134,12 +238,12 @@ class AboutSection extends StatelessWidget {
             color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDark ? AppColors.darkAccent.withValues(alpha: 0.2) : AppColors.lightAccent.withValues(alpha: 0.2),
+              color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
             ),
             boxShadow: [
               BoxShadow(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.04),
-                blurRadius: 10,
+                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: isDark ? 0.04 : 0.06),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -151,7 +255,7 @@ class AboutSection extends StatelessWidget {
               Text(
                 item['number']!,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.w900,
                   color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                 ),
@@ -160,7 +264,7 @@ class AboutSection extends StatelessWidget {
               Text(
                 item['label']!,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),

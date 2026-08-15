@@ -2,9 +2,10 @@ class ProjectModel {
   final String id;
   final String title;
   final String description;
+  final List<String> images;
   final List<String> technologies;
   final List<String> features;
-  final String? imagePath;
+  final String category;
   final String? githubUrl;
   final String? liveDemoUrl;
   final String? playStoreUrl;
@@ -14,9 +15,10 @@ class ProjectModel {
     required this.id,
     required this.title,
     required this.description,
+    required this.images,
     required this.technologies,
     required this.features,
-    this.imagePath,
+    required this.category,
     this.githubUrl,
     this.liveDemoUrl,
     this.playStoreUrl,

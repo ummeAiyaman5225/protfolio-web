@@ -21,6 +21,14 @@ class SpecializationSection extends StatelessWidget {
         'tech': 'Flutter 3.x / Dart / Mobile & Web',
       },
       {
+        'title': 'Firebase & Cloud Services',
+        'badge': 'CORE BACKEND',
+        'desc': 'Implementing real-time Firestore databases, Firebase Authentication (Email & Phone OTP), Cloud Messaging (FCM), Crashlytics, and Analytics.',
+        'iconWidget': const FaIcon(FontAwesomeIcons.fire, size: 24),
+        'isPrimary': true,
+        'tech': 'Firestore / Auth / FCM / Cloud Functions',
+      },
+      {
         'title': 'Mobile Application Dev',
         'badge': 'ANDROID + IOS',
         'desc': 'Complete end-to-end mobile development lifecycle from UI design to API integration, state management, and Play Store / App Store publishing.',
@@ -29,28 +37,20 @@ class SpecializationSection extends StatelessWidget {
         'tech': 'Native Features / APIs / Deployment',
       },
       {
-        'title': 'HTML5 & Web UI',
-        'badge': 'WEB UI',
-        'desc': 'Structuring responsive web layouts with modern semantic HTML markup and accessibility best practices.',
+        'title': 'Node.js & REST APIs',
+        'badge': 'BACKEND & INTEGRATION',
+        'desc': 'Designing scalable REST APIs, backend service communication, payment gateway integrations, and real-time location services.',
+        'iconWidget': const FaIcon(FontAwesomeIcons.nodeJs, size: 24),
+        'isPrimary': false,
+        'tech': 'Node.js / Express / REST APIs / Laravel',
+      },
+      {
+        'title': 'HTML5 & Modern Web UI',
+        'badge': 'WEB STANDARDS',
+        'desc': 'Structuring responsive web layouts with modern semantic HTML markup, custom CSS tokens, and dark/light mode themes.',
         'iconWidget': const FaIcon(FontAwesomeIcons.html5, size: 24),
         'isPrimary': false,
-        'tech': 'Semantic HTML / Web Standards',
-      },
-      {
-        'title': 'CSS & Responsive Styling',
-        'badge': 'RESPONSIVE STYLING',
-        'desc': 'Crafting sleek animations, dark/light themes, custom CSS tokens, flexbox/grid responsive layouts across all device viewports.',
-        'iconWidget': const FaIcon(FontAwesomeIcons.css3Alt, size: 24),
-        'isPrimary': false,
-        'tech': 'Modern CSS / Glassmorphic UI',
-      },
-      {
-        'title': 'React Native (Basic)',
-        'badge': 'BASIC KNOWLEDGE',
-        'desc': 'Familiarity with React Native component hierarchy, JavaScript/JSX, and cross-platform mobile fundamentals.',
-        'iconWidget': const FaIcon(FontAwesomeIcons.react, size: 24),
-        'isPrimary': false,
-        'tech': 'React Native Basics / JS',
+        'tech': 'Semantic HTML / CSS3 / Responsive UI',
       },
     ];
 
@@ -86,7 +86,7 @@ class SpecializationSection extends StatelessWidget {
           Text(
             'What I Specialize In',
             style: TextStyle(
-              fontSize: 26,
+              fontSize: isMobile ? 24 : 32,
               fontWeight: FontWeight.bold,
               color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
@@ -131,7 +131,7 @@ class SpecializationSection extends StatelessWidget {
         border: Border.all(
           color: isPrimary
               ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-              : (isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0)),
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: isPrimary ? 2 : 1,
         ),
         boxShadow: [

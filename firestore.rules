@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Portfolio contact messages collection rules
+    match /portfolio_messages/{messageId} {
+      // Allow any visitor to create a contact message if valid payload
+      allow create: if request.resource.data.name is string 
+                   && request.resource.data.email is string
+                   && request.resource.data.subject is string
+                   && request.resource.data.message is string
+                   && request.resource.data.name.size() > 0
+                   && request.resource.data.email.size() > 0
+                   && request.resource.data.subject.size() > 0
+                   && request.resource.data.message.size() > 0;
+      
+      // Disallow public read, update, or delete to protect user privacy
+      allow read, update, delete: if false;
+    }
+
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -4,6 +4,7 @@ import '../app/constants/app_colors.dart';
 import '../app/constants/app_config.dart';
 import '../utils/responsive.dart';
 import '../utils/url_launcher_util.dart';
+import 'navbar.dart';
 
 class Footer extends StatelessWidget {
   final Function(int) onNavItemSelected;
@@ -13,16 +14,7 @@ class Footer extends StatelessWidget {
     required this.onNavItemSelected,
   });
 
-  static const List<String> navItems = [
-    'Home',
-    'About',
-    'Specialization',
-    'Skills',
-    'Experience',
-    'Projects',
-    'Education',
-    'Contact',
-  ];
+  static const List<String> navItems = Navbar.navItems;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +29,7 @@ class Footer extends StatelessWidget {
         color: isDark ? const Color(0xFF071224) : const Color(0xFFE2E8F0),
         border: Border(
           top: BorderSide(
-            color: isDark ? const Color(0xFF233554) : const Color(0xFFCBD5E1),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
       ),
@@ -93,7 +85,7 @@ class Footer extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          '${AppConfig.primaryTitle} | ${AppConfig.secondaryTitle}',
+          '${AppConfig.primaryTitle} | Full-Stack Developer',
           style: TextStyle(
             fontSize: 13,
             color: isDark ? AppColors.darkAccent : AppColors.lightAccent,

@@ -5,9 +5,26 @@ import '../data/projects_data.dart';
 import '../models/project_model.dart';
 import '../utils/responsive.dart';
 import '../utils/url_launcher_util.dart';
+import 'project_image_carousel.dart';
 
-class ProjectsSection extends StatelessWidget {
+class ProjectsSection extends StatefulWidget {
   const ProjectsSection({super.key});
+
+  @override
+  State<ProjectsSection> createState() => _ProjectsSectionState();
+}
+
+class _ProjectsSectionState extends State<ProjectsSection> {
+  String _selectedCategory = 'All';
+
+  List<ProjectModel> get _filteredProjects {
+    if (_selectedCategory == 'All') {
+      return ProjectsData.allProjects;
+    }
+    return ProjectsData.allProjects
+        .where((p) => p.category == _selectedCategory || (_selectedCategory == 'Published Apps' && p.isPlayStoreApp))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +39,7 @@ class ProjectsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Section Subtitle Header
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -32,7 +50,7 @@ class ProjectsSection extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'FEATURED WORK',
+                'FEATURED WORK & PRODUCTS',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -44,20 +62,57 @@ class ProjectsSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Featured Open Source & GitHub Projects',
+            'Production Applications & Open Source Projects',
             style: TextStyle(
-              fontSize: 26,
+              fontSize: isMobile ? 24 : 32,
               fontWeight: FontWeight.bold,
               color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            '5 Production-Grade Flutter Repositories Built With Clean Architecture',
+            'A unified showcase of mobile applications, Play Store releases, and full-stack solutions built with clean architecture.',
             style: TextStyle(
               fontSize: 14,
               color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
+          ),
+          const SizedBox(height: 24),
+
+          // Category Filter Chips
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: ProjectsData.categories.map((cat) {
+              final isSelected = _selectedCategory == cat;
+              return ChoiceChip(
+                label: Text(cat),
+                selected: isSelected,
+                onSelected: (selected) {
+                  if (selected) {
+                    setState(() => _selectedCategory = cat);
+                  }
+                },
+                selectedColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                backgroundColor: isDark ? AppColors.darkCardBg : AppColors.lightCardHover,
+                labelStyle: TextStyle(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontSize: 13,
+                  color: isSelected
+                      ? (isDark ? AppColors.darkBackground : Colors.white)
+                      : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: isSelected
+                        ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  ),
+                ),
+                showCheckmark: false,
+              );
+            }).toList(),
           ),
           const SizedBox(height: 36),
 
@@ -65,10 +120,26 @@ class ProjectsSection extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               int crossAxisCount = constraints.maxWidth > 1024 ? 3 : (constraints.maxWidth > 650 ? 2 : 1);
+              final filtered = _filteredProjects;
+
+              if (filtered.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Text(
+                      'No projects found in this category.',
+                      style: TextStyle(
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
               return Wrap(
                 spacing: 20,
-                runSpacing: 20,
-                children: ProjectsData.githubProjects.map((project) {
+                runSpacing: 24,
+                children: filtered.map((project) {
                   final double width = crossAxisCount == 1
                       ? constraints.maxWidth
                       : (constraints.maxWidth - (crossAxisCount - 1) * 20) / crossAxisCount;
@@ -91,12 +162,15 @@ class ProjectsSection extends StatelessWidget {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+          color: project.isPlayStoreApp
+              ? AppColors.playStoreGreen.withValues(alpha: 0.4)
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          width: project.isPlayStoreApp ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
@@ -104,68 +178,68 @@ class ProjectsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image Container with Fallback
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            child: Container(
-              height: 160,
-              width: double.infinity,
-              color: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
-              child: Stack(
-                children: [
-                  // project image upload here
-                  if (project.imagePath != null)
-                    Image.asset(
-                      project.imagePath!,
-                      width: double.infinity,
-                      height: 160,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildProjectImageFallback(project.title, isDark);
-                      },
-                    )
-                  else
-                    _buildProjectImageFallback(project.title, isDark),
-
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkBackground : Colors.white).withValues(alpha: 0.9),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.code_rounded,
-                            size: 12,
-                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Dart / Flutter',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                            ),
-                          ),
-                        ],
-                      ),
+          // Project Image Carousel Container
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: ProjectImageCarousel(
+                  images: project.images,
+                  title: project.title,
+                ),
+              ),
+              // Category/Play Store Badge Overlay
+              Positioned(
+                top: 12,
+                right: 12,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: project.isPlayStoreApp
+                        ? AppColors.playStoreGreen
+                        : (isDark ? AppColors.darkBackground : Colors.white).withValues(alpha: 0.95),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: project.isPlayStoreApp
+                          ? AppColors.playStoreGreen
+                          : (isDark ? AppColors.darkAccent : AppColors.lightAccent),
                     ),
                   ),
-                ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (project.isPlayStoreApp) ...[
+                        const FaIcon(FontAwesomeIcons.googlePlay, size: 10, color: Colors.white),
+                        const SizedBox(width: 4),
+                        const Text(
+                          'PLAY STORE',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ] else ...[
+                        Icon(
+                          Icons.code_rounded,
+                          size: 12,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          project.category,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
 
           // Project Details
@@ -177,7 +251,7 @@ class ProjectsSection extends StatelessWidget {
                 Text(
                   project.title,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
@@ -221,10 +295,26 @@ class ProjectsSection extends StatelessWidget {
                 const Divider(height: 1),
                 const SizedBox(height: 14),
 
-                // Buttons
-                Row(
+                // Action Buttons
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
-                    if (project.githubUrl != null)
+                    if (project.playStoreUrl != null && project.playStoreUrl!.isNotEmpty)
+                      ElevatedButton.icon(
+                        onPressed: () => UrlLauncherUtil.launchURL(project.playStoreUrl!),
+                        icon: const FaIcon(FontAwesomeIcons.googlePlay, size: 12),
+                        label: const Text('Play Store'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.playStoreGreen,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    if (project.githubUrl != null && project.githubUrl!.isNotEmpty)
                       ElevatedButton.icon(
                         onPressed: () => UrlLauncherUtil.launchURL(project.githubUrl!),
                         icon: const FaIcon(FontAwesomeIcons.github, size: 14),
@@ -238,7 +328,6 @@ class ProjectsSection extends StatelessWidget {
                           ),
                         ),
                       ),
-                    const SizedBox(width: 8),
                     OutlinedButton.icon(
                       onPressed: () => _showProjectDetailsModal(context, project, isDark),
                       icon: const Icon(Icons.info_outline_rounded, size: 16),
@@ -246,7 +335,7 @@ class ProjectsSection extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         side: BorderSide(
-                          color: isDark ? const Color(0xFF233554) : const Color(0xFFCBD5E1),
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         shape: RoundedRectangleBorder(
@@ -264,33 +353,6 @@ class ProjectsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildProjectImageFallback(String title, bool isDark) {
-    return Container(
-      color: isDark ? const Color(0xFF112240) : const Color(0xFFE2E8F0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FaIcon(
-              FontAwesomeIcons.folder,
-              size: 40,
-              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showProjectDetailsModal(BuildContext context, ProjectModel project, bool isDark) {
     showDialog(
       context: context,
@@ -298,88 +360,128 @@ class ProjectsSection extends StatelessWidget {
         backgroundColor: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 600),
+          constraints: const BoxConstraints(maxWidth: 650),
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    project.title,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                project.description,
-                style: TextStyle(
-                  fontSize: 14,
-                  height: 1.5,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Key Features:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ...project.features.map(
-                (f) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Icon(Icons.check_circle_outline_rounded, size: 16, color: isDark ? AppColors.darkAccent : AppColors.lightAccent),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          f,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                         ),
                       ),
-                    ],
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  project.description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.6,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (project.githubUrl != null)
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        UrlLauncherUtil.launchURL(project.githubUrl!);
-                      },
-                      icon: const FaIcon(FontAwesomeIcons.github, size: 16),
-                      label: const Text('View on GitHub'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                        foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
-                      ),
+                const SizedBox(height: 20),
+                Text(
+                  'Key Features:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...project.features.map(
+                  (f) => Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline_rounded,
+                          size: 16,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            f,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                ],
-              ),
-            ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Technologies:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: project.technologies.map((t) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        t,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (project.githubUrl != null && project.githubUrl!.isNotEmpty)
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          UrlLauncherUtil.launchURL(project.githubUrl!);
+                        },
+                        icon: const FaIcon(FontAwesomeIcons.github, size: 14),
+                        label: const Text('GitHub'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

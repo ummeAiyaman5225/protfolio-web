@@ -2,46 +2,21 @@ import '../models/project_model.dart';
 import '../app/constants/app_config.dart';
 
 class ProjectsData {
-  static const List<ProjectModel> githubProjects = [
+  static const List<String> categories = [
+    'All',
+    'Flutter Apps',
+    'Full-Stack',
+    'Published Apps',
+  ];
+
+  static final List<ProjectModel> allProjects = [
     ProjectModel(
-      id: 'apex',
-      title: 'apex',
-      description: 'Eye and Dental Hospital Booking Application allowing users to browse specialized doctors, view available slots, and book real-time healthcare appointments.',
-      technologies: ['Flutter', 'Firebase', 'REST API', 'GetX'],
-      features: [
-        'Appointment booking system',
-        'Hospital & specialist listings',
-        'Doctor profiles & availability',
-        'Push notifications & reminders',
-        'Secure user authentication',
-      ],
-      // project image upload here
-      imagePath: 'assets/images/projects/Frame 427318612.png',
-      githubUrl: '${AppConfig.githubUrl}/apex',
-      liveDemoUrl: null,
-    ),
-    ProjectModel(
-      id: 'haai-ai',
-      title: 'haai-ai',
-      description: 'An AI-powered conversational chat application integrated with modern AI APIs featuring rich audio messaging and context-aware responses.',
-      technologies: ['Flutter', 'REST APIs', 'AI APIs', 'Firebase'],
-      features: [
-        'AI conversational interface',
-        'Chat history & state retention',
-        'Audio recording & response support',
-        'Modern dark/light glassmorphic UI',
-        'API integration & response parsing',
-      ],
-      // project image upload here
-      imagePath: 'assets/images/projects/Frame 427318600.png',
-      githubUrl: '${AppConfig.githubUrl}/haai-ai',
-      liveDemoUrl: null,
-    ),
-    ProjectModel(
-      id: 'ChatNest',
-      title: 'ChatNest',
-      description: 'A high-performance real-time messaging and communication application published on Google Play Store featuring instant delivery and media sharing.',
-      technologies: ['Flutter', 'Firebase', 'Firestore', 'REST APIs', 'GetX'],
+      id: 'chatnest',
+      title: 'ChatNest - Realtime Chat App',
+      description: 'High-performance real-time messaging and communication application published on Google Play Store featuring instant delivery, phone & email OTP authentication, media sharing, and push notifications.',
+      category: 'Published Apps',
+      isPlayStoreApp: true,
+      technologies: ['Flutter', 'Firebase', 'Firestore', 'REST APIs', 'GetX', 'OTP Auth'],
       features: [
         'Phone & email OTP authentication',
         'Real-time Firestore chat messaging',
@@ -49,32 +24,44 @@ class ProjectsData {
         'Optimized media & document sharing',
         'Production release optimization',
       ],
-      // project image upload here
-      imagePath: 'assets/images/projects/4.png',
+      images: const [
+        'assets/images/projects/4.png',
+        'assets/images/projects/Frame 427318601.png',
+        'assets/images/projects/Frame 427318610.png',
+        'assets/images/projects/Frame 427318611.png',
+      ],
       githubUrl: '${AppConfig.githubUrl}/ChatNest',
-      liveDemoUrl: null,
+      playStoreUrl: null,
     ),
     ProjectModel(
-      id: 'aazovo-flutter',
-      title: 'aazovo-flutter',
-      description: 'Food Delivery & E-Commerce Mobile Application supporting dynamic menu listing, cart management, payment gateway integration, and order tracking.',
-      technologies: ['Flutter', 'GetX', 'REST API', 'Node.js', 'Payment Gateway'],
+      id: 'apex',
+      title: 'Apex Healthcare & Appointment Booking',
+      description: 'Eye and Dental Hospital Booking Application allowing users to browse specialized doctors, view available slots, and book real-time healthcare appointments with push notifications.',
+      category: 'Published Apps',
+      isPlayStoreApp: true,
+      technologies: ['Flutter', 'Firebase', 'REST API', 'GetX', 'Appointment Engine'],
       features: [
-        'Interactive product/food catalog',
-        'Seamless cart & checkout workflow',
-        'Payment gateway integration',
-        'Order history & live status tracking',
-        'Responsive pixel-perfect layouts',
+        'Appointment booking system',
+        'Hospital & specialist listings',
+        'Doctor profiles & availability',
+        'Push notifications & reminders',
+        'Secure user authentication',
       ],
-      // project image upload here
-      imagePath: 'assets/images/projects/3.png',
-      githubUrl: '${AppConfig.githubUrl}/aazovo-flutter',
-      liveDemoUrl: null,
+      images: const [
+        'assets/images/projects/Frame 427318612.png',
+        'assets/images/projects/Frame 427318613.png',
+        'assets/images/projects/Frame 427318614.png',
+        'assets/images/projects/Frame 427318615.png',
+      ],
+      githubUrl: '${AppConfig.githubUrl}/apex',
+      playStoreUrl: null,
     ),
     ProjectModel(
       id: 'manthus',
-      title: 'manthus',
-      description: 'Logistics & Supply Chain Production Application providing real-time location tracking, route navigation, dynamic driver assignments, and shipment logs.',
+      title: 'Manthus Express & Logistics',
+      description: 'Logistics & Supply Chain Production Application providing real-time location tracking, Google Maps route navigation, dynamic driver assignments, and shipment logs.',
+      category: 'Published Apps',
+      isPlayStoreApp: true,
       technologies: ['Flutter', 'Google Maps', 'REST API', 'Location Tracking', 'Laravel'],
       features: [
         'Google Maps & live location tracking',
@@ -83,61 +70,56 @@ class ProjectsData {
         'Deep linking for instant order lookups',
         'Offline data syncing capabilities',
       ],
-      // project image upload here
-      imagePath: 'assets/images/projects/2.png',
+      images: const [
+        'assets/images/projects/1.png',
+        'assets/images/projects/2.png',
+        'assets/images/projects/Frame 427318618.png',
+        'assets/images/projects/Frame 427318619.png',
+      ],
       githubUrl: '${AppConfig.githubUrl}/manthus',
-      liveDemoUrl: null,
-    ),
-  ];
-
-  static const List<ProjectModel> playStoreApps = [
-    ProjectModel(
-      id: 'play_app_1',
-      title: 'ChatNest - Realtime Chat',
-      description: 'Production real-time communication application live on Google Play Store with thousands of active downloads.',
-      technologies: ['Flutter', 'Firebase', 'GetX', 'Cloud Messaging'],
-      features: [
-        'Real-time messaging',
-        'Media & audio sharing',
-        'Push notifications',
-        'Available on Play Store',
-      ],
-      // Play Store project image upload here
-      imagePath: 'assets/images/projects/Frame 427318601.png',
       playStoreUrl: null,
-      isPlayStoreApp: true,
     ),
     ProjectModel(
-      id: 'play_app_2',
-      title: 'Healthcare & Booking App',
-      description: 'Production hospital management & appointment booking app published on Google Play Store.',
-      technologies: ['Flutter', 'REST API', 'GetX', 'Firebase'],
+      id: 'aazovo-flutter',
+      title: 'Aazovo Food Delivery & E-Commerce',
+      description: 'Food Delivery & E-Commerce Mobile Application supporting dynamic menu listing, cart management, payment gateway integration, order tracking, and clean UI state architecture.',
+      category: 'Flutter Apps',
+      isPlayStoreApp: false,
+      technologies: ['Flutter', 'GetX', 'REST API', 'Node.js', 'Payment Gateway'],
       features: [
-        'Hospital & doctor discovery',
-        'Appointment schedule booking',
-        'Patient records & notifications',
-        'Available on Play Store',
+        'Interactive product/food catalog',
+        'Seamless cart & checkout workflow',
+        'Payment gateway integration',
+        'Order history & live status tracking',
+        'Responsive pixel-perfect layouts',
       ],
-      // Play Store project image upload here
-      imagePath: 'assets/images/projects/Frame 427318613.png',
-      playStoreUrl: null,
-      isPlayStoreApp: true,
+      images: const [
+        'assets/images/projects/3.png',
+        'assets/images/projects/Frame 427318616.png',
+        'assets/images/projects/Frame 427318617.png',
+      ],
+      githubUrl: '${AppConfig.githubUrl}/aazovo-flutter',
     ),
     ProjectModel(
-      id: 'play_app_3',
-      title: 'Logistics & Express Delivery',
-      description: 'Production logistics app featuring live Google Maps tracking and delivery management live on Play Store.',
-      technologies: ['Flutter', 'Google Maps', 'Location Tracking', 'Node.js'],
+      id: 'haai-ai',
+      title: 'Haai AI - Conversational Assistant',
+      description: 'An AI-powered conversational chat application integrated with modern AI APIs featuring rich audio messaging, context-aware responses, and clean glassmorphic UI.',
+      category: 'Full-Stack',
+      isPlayStoreApp: false,
+      technologies: ['Flutter', 'REST APIs', 'AI APIs', 'Firebase', 'Node.js'],
       features: [
-        'Live driver GPS tracking',
-        'Shipment status notifications',
-        'Customer digital signature',
-        'Available on Play Store',
+        'AI conversational interface',
+        'Chat history & state retention',
+        'Audio recording & response support',
+        'Modern dark/light glassmorphic UI',
+        'API integration & response parsing',
       ],
-      // Play Store project image upload here
-      imagePath: 'assets/images/projects/1.png',
-      playStoreUrl: null,
-      isPlayStoreApp: true,
+      images: const [
+        'assets/images/projects/Frame 427318600.png',
+        'assets/images/projects/Frame 427318620.png',
+        'assets/images/projects/Frame 427318621.png',
+      ],
+      githubUrl: '${AppConfig.githubUrl}/haai-ai',
     ),
   ];
 }

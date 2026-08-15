@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app/constants/app_colors.dart';
 import '../app/constants/app_config.dart';
 import '../utils/responsive.dart';
-import '../utils/url_launcher_util.dart';
-import 'cv_viewer_modal.dart';
 import 'theme_switch.dart';
 
 class Navbar extends StatelessWidget implements PreferredSizeWidget {
@@ -25,11 +22,8 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
   static const List<String> navItems = [
     'Home',
     'About',
-    'Specialization',
     'Skills',
-    'Experience',
     'Projects',
-    'Education',
     'Contact',
   ];
 
@@ -112,7 +106,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
 
-          // Desktop Navigation Links & Action Buttons
+          // Desktop Navigation Links
           if (!isMobile) ...[
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -125,7 +119,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                       onTap: () => onNavItemSelected(index),
                       borderRadius: BorderRadius.circular(6),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -155,44 +149,7 @@ class Navbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   );
                 }),
-                const SizedBox(width: 8),
-
-                // View CV Button
-                OutlinedButton.icon(
-                  onPressed: () => CvViewerModal.show(context),
-                  icon: const Icon(Icons.description_outlined, size: 16),
-                  label: const Text('View CV'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    side: BorderSide(
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  ),
-                ),
-                const SizedBox(width: 8),
-
-                // Download CV Button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // CV PDF upload here
-                    UrlLauncherUtil.launchURL(AppConfig.cvPdfPath);
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.download, size: 12),
-                  label: const Text('Download CV'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  ),
-                ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
 
                 // Theme Switch
                 const ThemeSwitch(),

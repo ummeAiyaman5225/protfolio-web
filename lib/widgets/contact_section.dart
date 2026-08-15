@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../app/constants/app_colors.dart';
 import '../app/constants/app_config.dart';
 import '../app/constants/app_strings.dart';
+import '../services/firebase_service.dart';
 import '../utils/responsive.dart';
 import '../utils/url_launcher_util.dart';
 
@@ -17,34 +18,75 @@ class _ContactSectionState extends State<ContactSection> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _subjectController = TextEditingController();
   final _messageController = TextEditingController();
+
   bool _isSubmitting = false;
+  String? _errorMessage;
+  String? _successMessage;
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _subjectController.dispose();
     _messageController.dispose();
     super.dispose();
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
+    if (_isSubmitting) return;
+
     if (_formKey.currentState!.validate()) {
-      setState(() => _isSubmitting = true);
-      Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isSubmitting = true;
+        _errorMessage = null;
+        _successMessage = null;
+      });
+
+      try {
+        await FirebaseService.sendContactMessage(
+          name: _nameController.text,
+          email: _emailController.text,
+          subject: _subjectController.text,
+          message: _messageController.text,
+        );
+
         if (mounted) {
-          setState(() => _isSubmitting = false);
+          setState(() {
+            _isSubmitting = false;
+            _successMessage = "Thank you! Your message has been sent successfully. I'll get back to you soon.";
+          });
+
           _nameController.clear();
           _emailController.clear();
+          _subjectController.clear();
           _messageController.clear();
+
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Thank you! Your message has been sent successfully.'),
-              backgroundColor: AppColors.primaryBlue,
+              content: Text("Thank you! Your message has been sent successfully. I'll get back to you soon."),
+              backgroundColor: AppColors.successGreen,
+              duration: Duration(seconds: 4),
             ),
           );
         }
-      });
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isSubmitting = false;
+            _errorMessage = "Failed to send message: ${e.toString()}. Please try again.";
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Failed to send message: ${e.toString()}"),
+              backgroundColor: AppColors.errorRed,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -136,7 +178,7 @@ class _ContactSectionState extends State<ContactSection> {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Column(
@@ -186,7 +228,9 @@ class _ContactSectionState extends State<ContactSection> {
             ),
           ),
           const SizedBox(height: 14),
-          Row(
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
             children: [
               _socialLinkChip(
                 iconWidget: const FaIcon(FontAwesomeIcons.github, size: 14),
@@ -194,7 +238,6 @@ class _ContactSectionState extends State<ContactSection> {
                 onTap: () => UrlLauncherUtil.launchURL(AppConfig.githubUrl),
                 isDark: isDark,
               ),
-              const SizedBox(width: 12),
               _socialLinkChip(
                 iconWidget: const FaIcon(FontAwesomeIcons.linkedinIn, size: 14),
                 label: 'LinkedIn',
@@ -284,7 +327,7 @@ class _ContactSectionState extends State<ContactSection> {
           color: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isDark ? const Color(0xFF233554) : const Color(0xFFCBD5E1),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
         child: Row(
@@ -318,7 +361,7 @@ class _ContactSectionState extends State<ContactSection> {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Form(
@@ -335,26 +378,98 @@ class _ContactSectionState extends State<ContactSection> {
               ),
             ),
             const SizedBox(height: 20),
+
+            if (_successMessage != null) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.successGreen.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.successGreen),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.check_circle_rounded, color: AppColors.successGreen, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _successMessage!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            if (_errorMessage != null) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.errorRed.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.errorRed),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.error_outline_rounded, color: AppColors.errorRed, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _errorMessage!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
             TextFormField(
               controller: _nameController,
+              enabled: !_isSubmitting,
               decoration: _inputDecoration('Your Name', Icons.person_outline, isDark),
               style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-              validator: (v) => v == null || v.isEmpty ? 'Please enter your name' : null,
+              validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your name' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _emailController,
+              enabled: !_isSubmitting,
+              keyboardType: TextInputType.emailAddress,
               decoration: _inputDecoration('Your Email', Icons.email_outlined, isDark),
               style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-              validator: (v) => v == null || !v.contains('@') ? 'Please enter a valid email' : null,
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) return 'Please enter your email';
+                final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                if (!emailRegex.hasMatch(v.trim())) return 'Please enter a valid email address';
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _subjectController,
+              enabled: !_isSubmitting,
+              decoration: _inputDecoration('Subject', Icons.subject_rounded, isDark),
+              style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+              validator: (v) => v == null || v.trim().isEmpty ? 'Please enter a subject' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _messageController,
+              enabled: !_isSubmitting,
               maxLines: 4,
               decoration: _inputDecoration('Your Message', Icons.chat_bubble_outline_rounded, isDark),
               style: TextStyle(color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-              validator: (v) => v == null || v.isEmpty ? 'Please enter your message' : null,
+              validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your message' : null,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -368,12 +483,15 @@ class _ContactSectionState extends State<ContactSection> {
                 ),
               ),
               child: _isSubmitting
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: isDark ? AppColors.darkBackground : Colors.white,
+                      ),
                     )
-                  : const Text('Send Message', style: TextStyle(fontWeight: FontWeight.bold)),
+                  : const Text('Send Message', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
             ),
           ],
         ),
@@ -392,11 +510,11 @@ class _ContactSectionState extends State<ContactSection> {
       fillColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0)),
+        borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: isDark ? const Color(0xFF233554) : const Color(0xFFE2E8F0)),
+        borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),

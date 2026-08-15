@@ -9,8 +9,8 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.darkBackground,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.darkAccent,
-        secondary: AppColors.cyanAccent,
-        surface: AppColors.darkCardBg,
+        secondary: AppColors.darkAccent,
+        surface: AppColors.darkSurface,
         onSurface: AppColors.darkTextPrimary,
         onPrimary: AppColors.darkBackground,
       ),
@@ -46,7 +46,7 @@ class AppTheme {
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFF233554), width: 1),
+          side: const BorderSide(color: AppColors.darkBorder, width: 1),
         ),
       ),
       useMaterial3: true,
@@ -59,8 +59,8 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.lightBackground,
       colorScheme: const ColorScheme.light(
         primary: AppColors.lightAccent,
-        secondary: AppColors.primaryBlue,
-        surface: AppColors.lightCardBg,
+        secondary: AppColors.lightAccent,
+        surface: AppColors.lightSurface,
         onSurface: AppColors.lightTextPrimary,
         onPrimary: Colors.white,
       ),
@@ -94,9 +94,10 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.lightCardBg,
         elevation: 2,
+        shadowColor: const Color(0x140F172A),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
+          side: const BorderSide(color: AppColors.lightBorder, width: 1),
         ),
       ),
       useMaterial3: true,
