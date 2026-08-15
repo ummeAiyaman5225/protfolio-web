@@ -10,6 +10,7 @@ class ProjectModel {
   final String? liveDemoUrl;
   final String? playStoreUrl;
   final bool isPlayStoreApp;
+  final bool visible;
 
   const ProjectModel({
     required this.id,
@@ -23,5 +24,6 @@ class ProjectModel {
     this.liveDemoUrl,
     this.playStoreUrl,
     this.isPlayStoreApp = false,
+    this.visible = true,
   });
 }

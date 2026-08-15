@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../app/constants/app_colors.dart';
+import '../utils/responsive.dart';
 
 class ProjectImageCarousel extends StatefulWidget {
   final List<String> images;
@@ -86,7 +87,7 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: Container(
-        height: 220,
+        height: Responsive.isMobile(context) ? 300 : 380,
         width: double.infinity,
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkBackground : const Color(0xFFF1F5F9),
@@ -96,33 +97,43 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
           children: [
             // PageView Carousel
             if (widget.images.isNotEmpty)
-              PageView.builder(
-                controller: _pageController,
-                itemCount: widget.images.length,
-                onPageChanged: (index) {
-                  setState(() => _currentIndex = index);
+              NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification notification) {
+                  if (notification is ScrollStartNotification) {
+                    _autoPlayTimer?.cancel();
+                  } else if (notification is ScrollEndNotification) {
+                    _resetAutoPlay();
+                  }
+                  return false;
                 },
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Image.asset(
-                        widget.images[index],
-                        fit: BoxFit.contain,
-                        alignment: Alignment.center,
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildFallback(isDark);
-                        },
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: widget.images.length,
+                  onPageChanged: (index) {
+                    setState(() => _currentIndex = index);
+                  },
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Image.asset(
+                          widget.images[index],
+                          fit: BoxFit.contain,
+                          alignment: Alignment.center,
+                          errorBuilder: (context, error, stackTrace) {
+                            return _buildFallback(isDark);
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               )
             else
               _buildFallback(isDark),
 
-            // Left Navigation Arrow (Only if multiple images)
-            if (hasMultipleImages)
+            // Left Navigation Arrow (Only if multiple images and not on mobile)
+            if (hasMultipleImages && !Responsive.isMobile(context))
               Positioned(
                 left: 8,
                 top: 0,
@@ -149,8 +160,8 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
                 ),
               ),
 
-            // Right Navigation Arrow (Only if multiple images)
-            if (hasMultipleImages)
+            // Right Navigation Arrow (Only if multiple images and not on mobile)
+            if (hasMultipleImages && !Responsive.isMobile(context))
               Positioned(
                 right: 8,
                 top: 0,
@@ -219,25 +230,69 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
   }
 
   Widget _buildFallback(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.image_not_supported_rounded,
-            size: 40,
-            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+    final titleLower = widget.title.toLowerCase();
+    final String text = titleLower.contains('ai')
+        ? 'AI AI'
+        : (titleLower.contains('nest') ? 'NEST' : widget.title.toUpperCase());
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  AppColors.darkCardBg,
+                  AppColors.darkAccentGlow.withValues(alpha: 0.15),
+                ]
+              : [
+                  AppColors.lightCardBg,
+                  AppColors.lightAccentGlow.withValues(alpha: 0.2),
+                ],
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                titleLower.contains('ai')
+                    ? Icons.auto_awesome_rounded
+                    : Icons.forum_rounded,
+                size: 32,
+                color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 4,
+                color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'PREVIEW COMING SOON',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

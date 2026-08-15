@@ -24,7 +24,7 @@ class HeroSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 30,
       ),
       child: Responsive(
         mobile: Column(
@@ -235,7 +235,7 @@ class HeroSection extends StatelessWidget {
           spacing: 10,
           runSpacing: 8,
           children: [
-            _roleBadge('Full-Stack Developer', isDark, true),
+            _roleBadge('Full-Stack Developer', isDark, false),
             _roleBadge('Flutter & Dart Specialist', isDark, false),
             _roleBadge('Firebase & REST APIs', isDark, false),
           ],
@@ -254,44 +254,44 @@ class HeroSection extends StatelessWidget {
         ),
         const SizedBox(height: 28),
 
-        // Action Buttons
-        Wrap(
-          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
-          spacing: 12,
-          runSpacing: 12,
-          children: [
-            ElevatedButton.icon(
-              onPressed: onViewWorkPressed,
-              icon: const Icon(Icons.folder_special_rounded, size: 18),
-              label: const Text('View My Work'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-            OutlinedButton.icon(
-              onPressed: onContactPressed,
-              icon: const Icon(Icons.mail_rounded, size: 18),
-              label: const Text('Contact Me'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                side: BorderSide(
-                  color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
+        // // Action Buttons
+        // Wrap(
+        //   alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+        //   spacing: 12,
+        //   runSpacing: 12,
+        //   children: [
+        //     ElevatedButton.icon(
+        //       onPressed: onViewWorkPressed,
+        //       icon: const Icon(Icons.folder_special_rounded, size: 18),
+        //       label: const Text('View My Work'),
+        //       style: ElevatedButton.styleFrom(
+        //         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+        //         foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+        //         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        //         elevation: 3,
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12),
+        //         ),
+        //       ),
+        //     ),
+        //     OutlinedButton.icon(
+        //       onPressed: onContactPressed,
+        //       icon: const Icon(Icons.mail_rounded, size: 18),
+        //       label: const Text('Contact Me'),
+        //       style: OutlinedButton.styleFrom(
+        //         foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+        //         side: BorderSide(
+        //           color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+        //         ),
+        //         padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(12),
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        // const SizedBox(height: 32),
 
         // Social Links
         Row(

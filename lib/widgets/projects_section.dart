@@ -18,10 +18,11 @@ class _ProjectsSectionState extends State<ProjectsSection> {
   String _selectedCategory = 'All';
 
   List<ProjectModel> get _filteredProjects {
+    final visibleProjects = ProjectsData.allProjects.where((p) => p.visible).toList();
     if (_selectedCategory == 'All') {
-      return ProjectsData.allProjects;
+      return visibleProjects;
     }
-    return ProjectsData.allProjects
+    return visibleProjects
         .where((p) => p.category == _selectedCategory || (_selectedCategory == 'Published Apps' && p.isPlayStoreApp))
         .toList();
   }
@@ -34,7 +35,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,20 +301,6 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    if (project.playStoreUrl != null && project.playStoreUrl!.isNotEmpty)
-                      ElevatedButton.icon(
-                        onPressed: () => UrlLauncherUtil.launchURL(project.playStoreUrl!),
-                        icon: const FaIcon(FontAwesomeIcons.googlePlay, size: 12),
-                        label: const Text('Play Store'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.playStoreGreen,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
                     if (project.githubUrl != null && project.githubUrl!.isNotEmpty)
                       ElevatedButton.icon(
                         onPressed: () => UrlLauncherUtil.launchURL(project.githubUrl!),

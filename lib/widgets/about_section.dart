@@ -24,7 +24,7 @@ class AboutSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,12 +43,12 @@ class AboutSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 6,
+                  flex: 4,
                   child: _buildDescriptionText(context, isDark, isMobile: false),
                 ),
-                const SizedBox(width: 48),
+                const SizedBox(width: 40),
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: _buildStatsGrid(isDark, isMobile: false),
                 ),
               ],
@@ -103,7 +103,7 @@ class AboutSection extends StatelessWidget {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
         ),
         boxShadow: [
           BoxShadow(
@@ -139,9 +139,13 @@ class AboutSection extends StatelessWidget {
                 icon: const Icon(Icons.folder_special_rounded, size: 16),
                 label: const Text('View Work'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                  foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                  backgroundColor: isDark ? AppColors.darkCardHover : AppColors.lightAccentGlow,
+                  foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                    width: 1.5,
+                  ),
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -197,8 +201,9 @@ class AboutSection extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   side: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                   ),
+
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -217,7 +222,7 @@ class AboutSection extends StatelessWidget {
       {'number': '1+', 'label': 'Years Experience', 'sub': 'Full-Stack & Mobile'},
       {'number': 'Cross', 'label': 'Android & iOS', 'sub': 'Flutter Specialist'},
       {'number': '5+', 'label': 'Production Repos', 'sub': 'GitHub Projects'},
-      {'number': '3', 'label': 'Live Play Store Apps', 'sub': 'Production Published'},
+      {'number': '3+', 'label': 'Live Play Store Apps', 'sub': 'Production Published'},
     ];
 
     return GridView.builder(
@@ -227,13 +232,13 @@ class AboutSection extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: isMobile ? 1.25 : 1.35,
+        childAspectRatio: isMobile ? 1.4 : 2.62 ,
       ),
       itemCount: stats.length,
       itemBuilder: (context, index) {
         final item = stats[index];
         return Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
             borderRadius: BorderRadius.circular(16),
@@ -255,16 +260,16 @@ class AboutSection extends StatelessWidget {
               Text(
                 item['number']!,
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w900,
                   color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 item['label']!,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
@@ -273,7 +278,7 @@ class AboutSection extends StatelessWidget {
               Text(
                 item['sub']!,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),

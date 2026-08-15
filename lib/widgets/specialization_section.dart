@@ -17,7 +17,7 @@ class SpecializationSection extends StatelessWidget {
         'badge': 'PRIMARY EXPERTISE',
         'desc': 'Building high-performance, pixel-perfect, cross-platform Android and iOS applications with clean architecture and smooth 60fps animations.',
         'iconWidget': const FaIcon(FontAwesomeIcons.flutter, size: 24),
-        'isPrimary': true,
+        'isPrimary': false,
         'tech': 'Flutter 3.x / Dart / Mobile & Web',
       },
       {
@@ -25,7 +25,7 @@ class SpecializationSection extends StatelessWidget {
         'badge': 'CORE BACKEND',
         'desc': 'Implementing real-time Firestore databases, Firebase Authentication (Email & Phone OTP), Cloud Messaging (FCM), Crashlytics, and Analytics.',
         'iconWidget': const FaIcon(FontAwesomeIcons.fire, size: 24),
-        'isPrimary': true,
+        'isPrimary': false,
         'tech': 'Firestore / Auth / FCM / Cloud Functions',
       },
       {
@@ -57,7 +57,7 @@ class SpecializationSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,25 +124,12 @@ class SpecializationSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isPrimary
-            ? (isDark ? AppColors.darkCardHover : AppColors.lightAccentGlow)
-            : (isDark ? AppColors.darkCardBg : AppColors.lightCardBg),
+        color:  isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isPrimary
-              ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-          width: isPrimary ? 2 : 1,
+          color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
+          width: 1.5,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: isPrimary
-                ? (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15)
-                : Colors.black.withValues(alpha: 0.04),
-            blurRadius: isPrimary ? 16 : 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

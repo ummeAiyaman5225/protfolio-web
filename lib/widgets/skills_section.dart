@@ -15,7 +15,7 @@ class SkillsSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +153,7 @@ class SkillsSection extends StatelessWidget {
         color: isDark ? AppColors.darkCardBg : AppColors.lightCardBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark ? AppColors.darkAccentGlow : AppColors.lightAccentGlow,
         ),
         boxShadow: [
           BoxShadow(
@@ -201,30 +201,23 @@ class SkillsSection extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: category.skills.map((skill) {
-              final isHighlighted = skill == 'Flutter' || skill == 'Firebase';
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isHighlighted
-                      ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-                      : (isDark ? AppColors.darkBackground : AppColors.lightCardHover),
+                  color: isDark ? AppColors.darkBackground : AppColors.lightCardHover,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isHighlighted
-                        ? (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-                        : (isDark
-                            ? AppColors.darkAccent.withValues(alpha: 0.2)
-                            : AppColors.lightAccent.withValues(alpha: 0.2)),
+                    color: isDark
+                        ? AppColors.darkAccent.withValues(alpha: 0.2)
+                        : AppColors.lightAccent.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Text(
                   skill,
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: isHighlighted ? FontWeight.bold : FontWeight.w500,
-                    color: isHighlighted
-                        ? (isDark ? AppColors.darkBackground : Colors.white)
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
               );

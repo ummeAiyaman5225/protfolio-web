@@ -13,7 +13,7 @@ class FirebaseService {
   }
 
   /// Saves a contact message to the 'portfolio_messages' collection in Firestore.
-  static Future<void> sendContactMessage({
+  static Future<DocumentReference<Map<String, dynamic>>> sendContactMessage({
     required String name,
     required String email,
     required String subject,
@@ -21,7 +21,7 @@ class FirebaseService {
   }) async {
     await _ensureFirebaseInitialized();
 
-    await FirebaseFirestore.instance.collection('portfolio_messages').add({
+    return await FirebaseFirestore.instance.collection('portfolio_messages').add({
       'name': name.trim(),
       'email': email.trim(),
       'subject': subject.trim(),
@@ -29,6 +29,20 @@ class FirebaseService {
       'createdAt': FieldValue.serverTimestamp(),
       'status': 'unread',
       'source': 'portfolio',
+    });
+  }
+
+  /// Updates the 'emailSent' field of a specific message document.
+  static Future<void> updateEmailStatus({
+    required String docId,
+    required bool emailSent,
+  }) async {
+    await _ensureFirebaseInitialized();
+    await FirebaseFirestore.instance
+        .collection('portfolio_messages')
+        .doc(docId)
+        .update({
+      'emailSent': emailSent,
     });
   }
 }

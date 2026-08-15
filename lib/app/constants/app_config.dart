@@ -16,7 +16,7 @@ class AppConfig {
   static const String phoneFormatted = '9574311343';
 
   // Social Links
-  static const String githubUrl = 'https://github.com/ummeAiyaman52255';
+  static const String githubUrl = 'https://github.com/ummeAiyaman5225';
   static const String linkedinUrl = 'https://www.linkedin.com/in/umme-aiyaman-kureshi-78b97a387/';
 
   // Asset Paths with configurable placeholders

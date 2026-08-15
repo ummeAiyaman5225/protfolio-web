@@ -15,7 +15,7 @@ class ExperienceSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

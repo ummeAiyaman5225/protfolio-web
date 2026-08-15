@@ -6,6 +6,7 @@ import '../app/constants/app_strings.dart';
 import '../services/firebase_service.dart';
 import '../utils/responsive.dart';
 import '../utils/url_launcher_util.dart';
+import '../core/services/email_service.dart';
 
 class ContactSection extends StatefulWidget {
   const ContactSection({super.key});
@@ -45,6 +46,7 @@ class _ContactSectionState extends State<ContactSection> {
       });
 
       try {
+        // Save to Firestore first
         await FirebaseService.sendContactMessage(
           name: _nameController.text,
           email: _emailController.text,
@@ -52,37 +54,61 @@ class _ContactSectionState extends State<ContactSection> {
           message: _messageController.text,
         );
 
+        // Send the email via EmailJS
+        final emailSent = await EmailService.sendContactEmail(
+          name: _nameController.text,
+          email: _emailController.text,
+          subject: _subjectController.text,
+          message: _messageController.text,
+        );
+
+        if (mounted) {
+          if (emailSent) {
+            setState(() {
+              _isSubmitting = false;
+              _successMessage = "Message sent successfully.";
+            });
+
+            _nameController.clear();
+            _emailController.clear();
+            _subjectController.clear();
+            _messageController.clear();
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Message sent successfully."),
+                backgroundColor: AppColors.successGreen,
+                duration: Duration(seconds: 4),
+              ),
+            );
+          } else {
+            setState(() {
+              _isSubmitting = false;
+              _errorMessage = "Your message was saved, but the email notification could not be sent. Please try again later.";
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Your message was saved, but the email notification could not be sent. Please try again later."),
+                backgroundColor: AppColors.errorRed,
+                duration: Duration(seconds: 5),
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        debugPrint('Firestore message save error: $e');
         if (mounted) {
           setState(() {
             _isSubmitting = false;
-            _successMessage = "Thank you! Your message has been sent successfully. I'll get back to you soon.";
+            _errorMessage = "Unable to send your message. Please try again.";
           });
-
-          _nameController.clear();
-          _emailController.clear();
-          _subjectController.clear();
-          _messageController.clear();
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Thank you! Your message has been sent successfully. I'll get back to you soon."),
-              backgroundColor: AppColors.successGreen,
-              duration: Duration(seconds: 4),
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isSubmitting = false;
-            _errorMessage = "Failed to send message: ${e.toString()}. Please try again.";
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Failed to send message: ${e.toString()}"),
+              content: Text("Unable to send your message. Please try again."),
               backgroundColor: AppColors.errorRed,
-              duration: const Duration(seconds: 4),
+              duration: Duration(seconds: 4),
             ),
           );
         }
@@ -98,7 +124,7 @@ class _ContactSectionState extends State<ContactSection> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: isMobile ? 40 : 80,
+        vertical: isMobile ? 20 : 40,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,6 +317,8 @@ class _ContactSectionState extends State<ContactSection> {
                   ),
                   Text(
                     subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

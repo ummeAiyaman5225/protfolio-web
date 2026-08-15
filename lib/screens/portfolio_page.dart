@@ -109,7 +109,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
             controller: _scrollController,
             child: Column(
               children: [
-                const SizedBox(height: 75), // Spacer for sticky navbar
+                const SizedBox(height: 70), // Spacer for sticky navbar
                 Container(
                   key: _sectionKeys[0],
                   child: HeroSection(
